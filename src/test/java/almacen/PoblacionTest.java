@@ -2,13 +2,14 @@ package almacen;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import paa.provincias.IPoblacion;
 
 public class PoblacionTest {
 
     @Test
-    public void testSetGetNombre() {
-        Poblacion p = new Poblacion();
-        String tp = "TestPoblacion";
+    public void setGetNombre() {
+        IPoblacion p = new Poblacion();
+        String tp = "TEST_POBLACION";
         p.setNombre(tp);
         String result = p.getNombre();
 
@@ -16,9 +17,9 @@ public class PoblacionTest {
     }
 
     @Test
-    public void testSetGetProvincia() {
-        Poblacion p = new Poblacion();
-        String tp = "TestProvincia";
+    public void setGetProvincia() {
+        IPoblacion p = new Poblacion();
+        String tp = "TEST_PROVINCIA";
         p.setProvincia(tp);
         String result = p.getProvincia();
 
@@ -26,8 +27,8 @@ public class PoblacionTest {
     }
 
     @Test
-    public void testSetGetHabitantes() {
-        Poblacion p = new Poblacion();
+    public void setGetHabitantes() {
+        IPoblacion p = new Poblacion();
         int th = 99;
         p.setHabitantes(th);
         int result = p.getHabitantes();
