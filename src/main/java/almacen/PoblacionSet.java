@@ -8,14 +8,36 @@ import java.util.Comparator;
 class PoblacionSet extends TreeSet<IPoblacion> implements SortedSet<IPoblacion> {
     static final long serialVersionUID = -2428562859390458285L;
 
+    /**
+     * Constructor
+     *
+     * @return  PoblacionSet con el nuevo
+     *          conjunto
+     */
     public PoblacionSet() {
         super();
     }
 
+    /**
+     * Constructor donde se le establece una nuevo
+     * comparador usado a la hora de generar el
+     * orden de los elementos del conjunto
+     *
+     * @param c Comparator nuevo ordenador
+     * @return  PoblacionSet con el nuevo
+     *          conjunto
+     */
     public PoblacionSet(Comparator<IPoblacion> c) {
         super(c);
     }
 
+    /**
+     * Método que busca una población dentro del conjunto
+     * atendiendo al nombre
+     *
+     * @param name String nombre de la población
+     * @return IPoblacion con la población encontrada
+     */
     public IPoblacion find(String name) {
         IPoblacion result = null;
         for(IPoblacion p: this) {
@@ -28,6 +50,13 @@ class PoblacionSet extends TreeSet<IPoblacion> implements SortedSet<IPoblacion> 
         return result;
     }
 
+    /**
+     * Método que busca una población dentro del conjunto
+     * atendiendo a la posición
+     *
+     * @param index int posición de la población
+     * @return IPoblacion con la población encontrada
+     */
     public IPoblacion find(int index) {
         IPoblacion p;
         IPoblacion[] pArray = this.toArray(new Poblacion[this.size()]);
