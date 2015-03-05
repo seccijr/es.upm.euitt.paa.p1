@@ -7,6 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.HashMap;
 import java.util.Collections;
+import java.io.*;
 
 class AlmacenPoblaciones implements IAlmacenPoblaciones {
     private HashMap<String, SortedSet<IPoblacion>> almacenPoblaciones = null;
@@ -54,7 +55,7 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
      *
      * @param provincia String con el nombre de la provincia
      * @param poblacion IPoblacion la instancia de la población
-                        a añadir
+     a añadir
      * @return          Boolean que verifica si se ha añadido
      *                  correctamente la población al contenedor
      */
@@ -274,7 +275,7 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
     }
 
     /**
-     * Método ue extrae el número de poblaciones para una
+     * Método que extrae el número de poblaciones para una
      * provincia dada
      *
      * @param provincia String con el nombre de la provincia
@@ -289,6 +290,15 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
         return result;
     }
 
+    /**
+     * Método que ordena un conjunto de poblaciones según
+     * un criterio definido poe la libreria paa.provincias
+     *
+     * @param provincia String con el nombre de la provincia
+     * @param ordenarPor int con el parámetro de ordenación
+     * @return          boolean que refleja si la operación
+     *                  se ha llevado a cabo con éxito
+     */
     public boolean ordenarPor(String provincia, int ordenarPor) {
         if (this.almacenPoblaciones.containsKey(provincia)) {
             SortedSet<IPoblacion> poblaciones = this.almacenPoblaciones.get(provincia);
@@ -296,12 +306,14 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
             if (ordenarPor == IAlmacenPoblaciones.ORDENARPORNOMBRE) {
                 ordenado = new PoblacionSet();
                 ordenado.addAll(poblaciones);
+                almacenPoblaciones.put(provincia, ordenado);
 
                 return true;
             }
             if (ordenarPor == IAlmacenPoblaciones.ORDENARPORHABITANTES) {
                 ordenado = new PoblacionSet(new NumeroHabitantesComparator());
                 ordenado.addAll(poblaciones);
+                almacenPoblaciones.put(provincia, ordenado);
 
                 return true;
             }
@@ -310,11 +322,55 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
         return false;
     }
 
+    /**
+     * Método que guardar el almacen en un fichero
+     *
+     * @param nombreFichero String con el nombre del fichero
+     * @return          boolean que refleja si la operación
+     *                  se ha llevado a cabo con éxito
+     */
     public boolean guardar(String nombreFichero) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(nombreFichero);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(this.almacenPoblaciones);
+            out.close();
+            fileOut.close();
+
+            return true;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
+    /**
+     * Método que recuperar el almacen desde un fichero
+     *
+     * @param nombreFichero String con el nombre del fichero
+     * @return          boolean que refleja si la operación
+     *                  se ha llevado a cabo con éxito
+     */
+    @SuppressWarnings("unchecked")
     public boolean recuperar(String nombreFichero) {
+        try {
+            FileInputStream fileIn = new FileInputStream(nombreFichero);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            this.almacenPoblaciones = (HashMap<String, SortedSet<IPoblacion>>) in.readObject();
+            in.close();
+            fileIn.close();
+
+            return true;
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 }

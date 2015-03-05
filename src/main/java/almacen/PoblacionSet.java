@@ -5,8 +5,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Comparator;
 
-@SuppressWarnings("serial")
 class PoblacionSet extends TreeSet<IPoblacion> implements SortedSet<IPoblacion> {
+    static final long serialVersionUID = -2428562859390458285L;
+
     public PoblacionSet() {
         super();
     }

@@ -2,8 +2,10 @@ package almacen;
 
 import paa.provincias.IPoblacion;
 import java.util.Comparator;
+import java.io.Serializable;
 
-class Poblacion implements IPoblacion, Comparable<IPoblacion> {
+class Poblacion implements IPoblacion, Comparable<IPoblacion>, Serializable {
+    static final long serialVersionUID = -2756440049183558014L;
     private String nombre;
     private String provincia;
     private int habitantes;

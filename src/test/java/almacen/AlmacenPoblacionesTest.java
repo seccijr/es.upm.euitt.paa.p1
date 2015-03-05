@@ -238,4 +238,146 @@ public class AlmacenPoblacionesTest {
 
         assertThat(result, is(Integer.MIN_VALUE));
     }
+
+    @Test
+    public void ordenarPorHabitantesPass() {
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", new Poblacion("Cabrera", "Madrid", 2422));
+        boolean result = ap.ordenarPor("Madrid", IAlmacenPoblaciones.ORDENARPORHABITANTES);
+
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void ordenarPorHabitantesFails() {
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", new Poblacion("Cabrera", "Madrid", 2422));
+        boolean result = ap.ordenarPor("Barcelona", IAlmacenPoblaciones.ORDENARPORHABITANTES);
+
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void ordenarPorHabitantesOrdersMatch() {
+        IPoblacion alpedrete;
+        IPoblacion becerril;
+        IPoblacion cabrera;
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", alpedrete = new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", becerril = new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", cabrera = new Poblacion("Cabrera", "Madrid", 2422));
+        boolean result = ap.ordenarPor("Madrid", IAlmacenPoblaciones.ORDENARPORHABITANTES);
+        PoblacionSet poblaciones = (PoblacionSet)ap.getPoblaciones("Madrid");
+        IPoblacion first = poblaciones.find(0);
+        IPoblacion second = poblaciones.find(1);
+        IPoblacion third = poblaciones.find(2);
+
+
+        assertThat(result, is(true));
+        assertThat(first, is(cabrera));
+        assertThat(second, is(becerril));
+        assertThat(third, is(alpedrete));
+    }
+
+    @Test
+    public void ordenarPorNombrePass() {
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", new Poblacion("Cabrera", "Madrid", 2422));
+        boolean result = ap.ordenarPor("Madrid", IAlmacenPoblaciones.ORDENARPORNOMBRE);
+
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void ordenarPorNombreFails() {
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", new Poblacion("Cabrera", "Madrid", 2422));
+        boolean result = ap.ordenarPor("Barcelona", IAlmacenPoblaciones.ORDENARPORNOMBRE);
+
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void ordenarPorNombreOrdersMatch() {
+        IPoblacion alpedrete;
+        IPoblacion becerril;
+        IPoblacion cabrera;
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", alpedrete = new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", becerril = new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", cabrera = new Poblacion("Cabrera", "Madrid", 2422));
+        boolean result = ap.ordenarPor("Madrid", IAlmacenPoblaciones.ORDENARPORNOMBRE);
+        PoblacionSet poblaciones = (PoblacionSet)ap.getPoblaciones("Madrid");
+        IPoblacion first = poblaciones.find(0);
+        IPoblacion second = poblaciones.find(1);
+        IPoblacion third = poblaciones.find(2);
+
+
+        assertThat(result, is(true));
+        assertThat(first, is(alpedrete));
+        assertThat(second, is(becerril));
+        assertThat(third, is(cabrera));
+    }
+
+    @Test
+    public void guardarPass() {
+        String nombreFichero = "/tmp/almacen.ser";
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", new Poblacion("Cabrera", "Madrid", 2422));
+        boolean result = ap.guardar(nombreFichero);
+
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void recuperarPass() {
+        String nombreFichero = "/tmp/almacen.ser";
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", new Poblacion("Cabrera", "Madrid", 2422));
+        boolean rGuardar = ap.guardar(nombreFichero);
+        boolean rRecuperar = ap.recuperar(nombreFichero);
+
+        assertThat(rGuardar, is(true));
+        assertThat(rRecuperar, is(true));
+    }
+
+    @Test
+    public void guardarRecuperarMatch() {
+        IPoblacion alpedrete, becerril, cabrera;
+        String nombreFichero = "/tmp/almacen.ser";
+        IAlmacenPoblaciones ap = new AlmacenPoblaciones();
+        ap.addProvincia("Madrid");
+        ap.addPoblacion("Madrid", alpedrete = new Poblacion("Alpedrete", "Madrid", 12357));
+        ap.addPoblacion("Madrid", becerril = new Poblacion("Becerril", "Madrid", 5022));
+        ap.addPoblacion("Madrid", cabrera = new Poblacion("Cabrera", "Madrid", 2422));
+        ap.guardar(nombreFichero);
+        ap.recuperar(nombreFichero);
+        IPoblacion rAlpedrete = ap.getPoblacion("Madrid", "Alpedrete");
+        IPoblacion rBecerril = ap.getPoblacion("Madrid", "Becerril");
+        IPoblacion rCabrera = ap.getPoblacion("Madrid", "Cabrera");
+
+        assertThat(rAlpedrete.getNombre(), equalTo(alpedrete.getNombre()));
+        assertThat(rBecerril.getNombre(), equalTo(becerril.getNombre()));
+        assertThat(rCabrera.getNombre(), equalTo(cabrera.getNombre()));
+    }
 }
