@@ -3,9 +3,18 @@ package almacen;
 import paa.provincias.IPoblacion;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Comparator;
 
 @SuppressWarnings("serial")
 class PoblacionSet extends TreeSet<IPoblacion> implements SortedSet<IPoblacion> {
+    public PoblacionSet() {
+        super();
+    }
+
+    public PoblacionSet(Comparator<IPoblacion> c) {
+        super(c);
+    }
+
     public IPoblacion find(String name) {
         IPoblacion result = null;
         for(IPoblacion p: this) {
@@ -19,8 +28,16 @@ class PoblacionSet extends TreeSet<IPoblacion> implements SortedSet<IPoblacion> 
     }
 
     public IPoblacion find(int index) {
+        IPoblacion p;
         IPoblacion[] pArray = this.toArray(new Poblacion[this.size()]);
 
-        return pArray[index];
+        try {
+            p = pArray[index];
+        }
+        catch(ArrayIndexOutOfBoundsException e) {
+            p = null;
+        }
+
+        return p;
     }
 }

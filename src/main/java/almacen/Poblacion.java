@@ -1,6 +1,7 @@
 package almacen;
 
 import paa.provincias.IPoblacion;
+import java.util.Comparator;
 
 class Poblacion implements IPoblacion, Comparable<IPoblacion> {
     private String nombre;

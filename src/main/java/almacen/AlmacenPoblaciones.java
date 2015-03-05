@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.HashMap;
+import java.util.Collections;
 
 class AlmacenPoblaciones implements IAlmacenPoblaciones {
     private HashMap<String, SortedSet<IPoblacion>> almacenPoblaciones = null;
@@ -138,10 +139,12 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
     }
 
     /**
-     * Método auxiliar para borrar si una provincia
-     * dentro del almacen
+     * Método auxiliar para borrar si una población de una
+     * provincia existe dentro del almacen
      *
      * @param provincia String con el nombre de la provincia
+     * @param poblacion int con el índice de la población
+     *                  dentro de la provincia
      * @return          Boolean que verifica si se ha borrado
      *                  la provincia
      */
@@ -158,14 +161,57 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
         return false;
     }
 
+    /**
+     * Método auxiliar para borrar si una población de una
+     * provincia existe dentro del almacen
+     *
+     * @param provincia String con el nombre de la provincia
+     * @param poblacion String con el nombre de la población
+     *                  dentro de la provincia
+     * @return          Boolean que verifica si se ha borrado
+     *                  la provincia
+     */
     public boolean delPoblacion(String provincia, String nombre) {
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
+            IPoblacion poblacion = poblaciones.find(nombre);
+            boolean result = poblaciones.remove(poblacion);
+            this.almacenPoblaciones.put(provincia, poblaciones);
+
+            return result;
+        }
+
         return false;
     }
 
+    /**
+     * Método auxiliar para borrar si una población de una
+     * provincia existe dentro del almacen
+     *
+     * @param provincia String con el nombre de la provincia
+     * @param poblacion IPoblacion con la población
+     *                  dentro de la provincia
+     * @return          Boolean que verifica si se ha borrado
+     *                  la provincia
+     */
     public boolean delPoblacion(String provincia, IPoblacion poblacion) {
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
+            boolean result = poblaciones.remove(poblacion);
+            this.almacenPoblaciones.put(provincia, poblaciones);
+
+            return result;
+        }
+
         return false;
     }
 
+    /**
+     * Método para extraer todas la provincias del almacén
+     *
+     * @return          Todas las provincias del
+     *                  almacén en un Set
+     */
     public Set<String> getProvincias() {
         if (this.almacenPoblaciones != null) {
             return this.almacenPoblaciones.keySet();
@@ -174,10 +220,34 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
         return null;
     }
 
+    /**
+     * Método auxiliar para extraer una población de una
+     * provincia
+     *
+     * @param provincia String con el nombre de la provincia
+     * @param poblacion int con el índice de la población
+     *                  dentro de la provincia
+     * @return          IPoblacion con la población
+     */
     public IPoblacion getPoblacion(String provincia, int posicion) {
-        return null;
+        IPoblacion p = null;
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            PoblacionSet poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
+            p = poblaciones.find(posicion);
+        }
+
+        return p;
     }
 
+    /**
+     * Método auxiliar para extraer una población de una
+     * provincia
+     *
+     * @param provincia String con el nombre de la provincia
+     * @param poblacion String con el nombre de la población
+     *                  dentro de la provincia
+     * @return          IPoblacion con la población
+     */
     public IPoblacion getPoblacion(String provincia, String nombre) {
         IPoblacion p = null;
         if (this.almacenPoblaciones.containsKey(provincia)) {
@@ -188,15 +258,55 @@ class AlmacenPoblaciones implements IAlmacenPoblaciones {
         return p;
     }
 
+    /**
+     * Método ue extrae todas las poblaciones para una provincia
+     *
+     * @param provincia String con el nombre de la provincia
+     * @return          IPoblacion con la población
+     */
     public SortedSet<IPoblacion> getPoblaciones(String provincia) {
-        return null;
+        PoblacionSet poblaciones = null;
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            poblaciones = (PoblacionSet)this.almacenPoblaciones.get(provincia);
+        }
+
+        return poblaciones;
     }
 
+    /**
+     * Método ue extrae el número de poblaciones para una
+     * provincia dada
+     *
+     * @param provincia String con el nombre de la provincia
+     * @return          int con el número de poblaciones
+     */
     public int getNumPoblaciones(String provincia) {
-        return Integer.MIN_VALUE;
+        int result = Integer.MIN_VALUE;
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            result = this.almacenPoblaciones.get(provincia).size();
+        }
+
+        return result;
     }
 
     public boolean ordenarPor(String provincia, int ordenarPor) {
+        if (this.almacenPoblaciones.containsKey(provincia)) {
+            SortedSet<IPoblacion> poblaciones = this.almacenPoblaciones.get(provincia);
+            SortedSet<IPoblacion> ordenado;
+            if (ordenarPor == IAlmacenPoblaciones.ORDENARPORNOMBRE) {
+                ordenado = new PoblacionSet();
+                ordenado.addAll(poblaciones);
+
+                return true;
+            }
+            if (ordenarPor == IAlmacenPoblaciones.ORDENARPORHABITANTES) {
+                ordenado = new PoblacionSet(new NumeroHabitantesComparator());
+                ordenado.addAll(poblaciones);
+
+                return true;
+            }
+        }
+
         return false;
     }
 
